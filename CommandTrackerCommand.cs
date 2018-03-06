@@ -5,7 +5,6 @@ using Rhino.Input.Custom;
 
 namespace CommandTracker
 {
-  [System.Runtime.InteropServices.Guid("9d5ad923-3041-41c0-835a-4c8af2c3bb05")]
   public class CommandTrackerCommand : Command
   {
     public override string EnglishName => "CommandTracker";

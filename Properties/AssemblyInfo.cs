@@ -12,16 +12,17 @@ using Rhino.PlugIns;
 [assembly: PlugInDescription(DescriptionType.Organization, "Robert McNeel & Associates")]
 [assembly: PlugInDescription(DescriptionType.UpdateUrl, "https://github.com/dalefugier/CommandTracker")]
 [assembly: PlugInDescription(DescriptionType.WebSite, "https://github.com/dalefugier/CommandTracker")]
+[assembly: PlugInDescription(DescriptionType.Icon, "CommandTracker.Resources.CommandTracker.ico")]
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("CommandTracker")] // Plug-In title is extracted from this
-[assembly: AssemblyDescription("CommandTracker for Rhinoceros® 5")]
+[assembly: AssemblyDescription("CommandTracker for Rhinoceros® 6")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Robert McNeel & Associates")]
 [assembly: AssemblyProduct("CommandTracker")]
-[assembly: AssemblyCopyright("Copyright © 2014, Robert McNeel & Associates")]
+[assembly: AssemblyCopyright("Copyright © 2018, Robert McNeel & Associates")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: AssemblyInformationalVersion("2")]
@@ -44,5 +45,5 @@ using Rhino.PlugIns;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("5.0.0.0")]
-[assembly: AssemblyFileVersion("5.0.0.0")]
+[assembly: AssemblyVersion("6.0.0.0")]
+[assembly: AssemblyFileVersion("6.0.0.0")]
