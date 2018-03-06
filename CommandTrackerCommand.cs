@@ -8,18 +8,11 @@ namespace CommandTracker
   [System.Runtime.InteropServices.Guid("9d5ad923-3041-41c0-835a-4c8af2c3bb05")]
   public class CommandTrackerCommand : Command
   {
-    public CommandTrackerCommand()
-    {
-    }
-
-    public override string EnglishName
-    {
-      get { return "CommandTracker"; }
-    }
+    public override string EnglishName => "CommandTracker";
 
     protected override Result RunCommand(RhinoDoc doc, RunMode mode)
     {
-      GetOption go = new GetOption();
+      var go = new GetOption();
       go.SetCommandPrompt("Command tracking options");
       go.AcceptNothing(true);
 
@@ -27,46 +20,51 @@ namespace CommandTracker
       {
         go.ClearCommandOptions();
 
-        int clear_index = go.AddOption("Clear");
+        var clear_index = go.AddOption("Clear");
 
-        bool bEnabled = CommandTrackerPlugIn.Instance.CommandTrackingEnabled;
-        OptionToggle opt_enable = new OptionToggle(bEnabled, "Off", "On");
-        int enable_index = go.AddOptionToggle("Enable", ref opt_enable);
+        var enabled = CommandTrackerPlugIn.Instance.CommandTrackingEnabled;
+        var opt_enable = new OptionToggle(enabled, "Off", "On");
+        var enable_index = go.AddOptionToggle("Enable", ref opt_enable);
 
-        int report_index = go.AddOption("Report");
+        var report_index = go.AddOption("Report");
 
-        GetResult res = go.Get();
+        var res = go.Get();
 
         if (res == GetResult.Nothing)
           return Result.Nothing;
-        else if (res != GetResult.Option)
+
+        if (res != GetResult.Option)
           break;
 
-        CommandLineOption option = go.Option();
+        var option = go.Option();
         if (null == option)
-          return Rhino.Commands.Result.Failure;
+          return Result.Failure;
 
-        int index = option.Index;
-
+        var index = option.Index;
         if (index == clear_index)
         {
-          int count = CommandTrackerPlugIn.Instance.ClearCommandDictionary();
-          if (0 == count)
-            RhinoApp.WriteLine("No command tracking records to clear.");
-          else if (1 == count)
-            RhinoApp.WriteLine("1 command tracking record cleared.");
-          else
-            RhinoApp.WriteLine("{0} command tracking records cleared.", count);
+          var count = CommandTrackerPlugIn.Instance.ClearCommandDictionary();
+          switch (CommandTrackerPlugIn.Instance.ClearCommandDictionary())
+          {
+            case 0:
+              RhinoApp.WriteLine("No command tracking records to clear.");
+              break;
+            case 1:
+              RhinoApp.WriteLine("1 command tracking record cleared.");
+              break;
+            default:
+              RhinoApp.WriteLine("{0} command tracking records cleared.", count);
+              break;
+          }
         }
         else if (index == enable_index)
         {
-          bEnabled = opt_enable.CurrentValue;
-          CommandTrackerPlugIn.Instance.CommandTrackingEnabled = bEnabled;
+          CommandTrackerPlugIn.Instance.CommandTrackingEnabled = opt_enable.CurrentValue;
         }
         else if (index == report_index)
         {
-          string message = string.Empty;
-          bool rc = CommandTrackerPlugIn.Instance.CommandTrackingReport(ref message);
+          var message = string.Empty;
+          var rc = CommandTrackerPlugIn.Instance.CommandTrackingReport(ref message);
           if (rc)
             Rhino.UI.Dialogs.ShowTextDialog(message, EnglishName);
           else
