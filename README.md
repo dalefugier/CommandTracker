@@ -7,13 +7,13 @@ Building Sample
 --------------------
 To build the sample, you are going to need:
 
-* Rhinoceros 6 (http://www.rhino3d.com)
-* Microsoft Visual C# 2017
-* Microsoft .NET Framework 4.5
+* Rhinoceros 7 (http://www.rhino3d.com)
+* Microsoft Visual C# 2019
+* Microsoft .NET Framework 4.8
 
 Legal Stuff
 -----------
-Copyright © 2018 Robert McNeel & Associates. All Rights Reserved.
+Copyright © 2018-2921 Robert McNeel & Associates. All Rights Reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in

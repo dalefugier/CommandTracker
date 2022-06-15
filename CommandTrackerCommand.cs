@@ -1,16 +1,21 @@
-﻿using Rhino;
+﻿using Eto.Forms;
+using Rhino;
 using Rhino.Commands;
 using Rhino.Input;
 using Rhino.Input.Custom;
 
 namespace CommandTracker
 {
-  public class CommandTrackerCommand : Command
+  public class CommandTrackerCommand : Rhino.Commands.Command
   {
     public override string EnglishName => "CommandTracker";
 
     protected override Result RunCommand(RhinoDoc doc, RunMode mode)
     {
+      var vm = CommandTrackerViewModel.GetFromDocument(doc);
+      if (null == vm)
+        return Result.Failure;
+
       var go = new GetOption();
       go.SetCommandPrompt("Command tracking options");
       go.AcceptNothing(true);
@@ -20,12 +25,9 @@ namespace CommandTracker
         go.ClearCommandOptions();
 
         var clear_index = go.AddOption("Clear");
-
-        var enabled = CommandTrackerPlugIn.Instance.CommandTrackingEnabled;
-        var opt_enable = new OptionToggle(enabled, "Off", "On");
-        var enable_index = go.AddOptionToggle("Enable", ref opt_enable);
-
         var report_index = go.AddOption("Report");
+        var opt_enable = new OptionToggle(CommandTrackerPlugIn.Instance.CommandTrackingEnabled, "Off", "On");
+        var enable_index = go.AddOptionToggle("Enable", ref opt_enable);
 
         var res = go.Get();
 
@@ -42,8 +44,18 @@ namespace CommandTracker
         var index = option.Index;
         if (index == clear_index)
         {
-          var count = CommandTrackerPlugIn.Instance.ClearCommandDictionary();
-          switch (CommandTrackerPlugIn.Instance.ClearCommandDictionary())
+          var count = vm.Count;
+
+          if (count > 0 && mode == RunMode.Interactive)
+          {
+            var msg = "Are you sure you want to clear all command tracking history?";
+            var result = MessageBox.Show(msg, EnglishName, MessageBoxButtons.YesNo, MessageBoxType.Question, MessageBoxDefaultButton.No);
+            if (result == DialogResult.No)
+              continue;
+          }
+
+          vm.Clear();
+          switch (count)
           {
             case 0:
               RhinoApp.WriteLine("No command tracking records to clear.");
@@ -56,18 +68,17 @@ namespace CommandTracker
               break;
           }
         }
-        else if (index == enable_index)
-        {
-          CommandTrackerPlugIn.Instance.CommandTrackingEnabled = opt_enable.CurrentValue;
-        }
         else if (index == report_index)
         {
-          var message = string.Empty;
-          var rc = CommandTrackerPlugIn.Instance.CommandTrackingReport(ref message);
+          var rc = vm.Report(out var message);
           if (rc)
             Rhino.UI.Dialogs.ShowTextDialog(message, EnglishName);
           else
             RhinoApp.WriteLine("No command tracking records to report.");
+        }
+        else if (index == enable_index)
+        {
+          CommandTrackerPlugIn.Instance.CommandTrackingEnabled = opt_enable.CurrentValue;
         }
       }
 
