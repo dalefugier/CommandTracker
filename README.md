@@ -1,7 +1,7 @@
 CommandTracker
 ==============
 
-Sample C# RhinoCommon plug-in that demonstrates how to track the commands run by a user.
+RhinoFileVersion is a simple utility plug-in that prints the Rhino file version number to the command line when you open a file.
 
 Building Sample
 --------------------
