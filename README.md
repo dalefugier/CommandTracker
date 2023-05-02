@@ -1,7 +1,7 @@
 CommandTracker
 ==============
 
-RhinoFileVersion is a simple utility plug-in that prints the Rhino file version number to the command line when you open a file.
+CommandTracker is a simple utility plug-in that tracks the command you run.
 
 Building Sample
 --------------------
