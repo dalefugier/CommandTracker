@@ -21,7 +21,7 @@ namespace CommandTracker
       go.AcceptNothing(true);
 
       for (;;)
-      {
+      { 
         go.ClearCommandOptions();
 
         var clear_index = go.AddOption("Clear");
@@ -44,7 +44,7 @@ namespace CommandTracker
         var index = option.Index;
         if (index == clear_index)
         {
-          var count = vm.Count;
+          var count = vm.CommandCount;
 
           if (count > 0 && mode == RunMode.Interactive)
           {
@@ -54,7 +54,7 @@ namespace CommandTracker
               continue;
           }
 
-          vm.Clear();
+          vm.ClearAllHistory();
           switch (count)
           {
             case 0:

@@ -1,95 +1,33 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug32</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D7591C0D-AA74-4DB1-8155-C5D7E9C3F002}</ProjectGuid>
+    <TargetFrameworks>net7.0;net48</TargetFrameworks>
+    <TargetExt>.rhp</TargetExt>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CommandTracker</RootNamespace>
-    <AssemblyName>CommandTracker</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <Company>Robert McNeel &amp; Associates</Company>
+    <Copyright>Copyright © 2013-2023, Robert McNeel &amp; Associates</Copyright>
+    <Product>CommandTracker</Product>
+    <Description>CommandTracker Plug-in for Rhinoceros®</Description>
+    <Version>8.0</Version>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0|AnyCPU'">
+    <NoWarn>1701;1702;NU1701</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|AnyCPU'">
+    <NoWarn>1701;1702;NU1701</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0|AnyCPU'">
+    <NoWarn>1701;1702;NU1701</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|AnyCPU'">
+    <NoWarn>1701;1702;NU1701</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Eto, Version=2.6.0.0, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
-      <HintPath>packages\RhinoCommon.7.14.22010.17001\lib\net48\Eto.dll</HintPath>
-    </Reference>
-    <Reference Include="Rhino.UI, Version=7.14.22010.17000, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
-      <HintPath>packages\RhinoCommon.7.14.22010.17001\lib\net48\Rhino.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="RhinoCommon, Version=7.14.22010.17000, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
-      <HintPath>packages\RhinoCommon.7.14.22010.17001\lib\net48\RhinoCommon.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="Microsoft.CSharp" />
+    <EmbeddedResource Include="Resources\**\*" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandTrackerCommand.cs" />
-    <Compile Include="CommandTrackerPlugIn.cs" />
-    <Compile Include="CommandTrackerViewModel.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <PackageReference Include="RhinoCommon">
+      <Version>8.0.23304.9001</Version>
+    </PackageReference>
+    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\CommandTracker.ico" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <PropertyGroup>
-    <PostBuildEvent>Copy "$(TargetPath)" "$(TargetDir)$(ProjectName).rhp"
-Erase "$(TargetPath)"</PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <FallbackCulture>en-US</FallbackCulture>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <StartProgram>c:\Program Files\Rhinoceros 5 (64-bit)\System\Rhino.exe</StartProgram>
-    <StartArguments>
-    </StartArguments>
-    <StartAction>Program</StartAction>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <Import Project="packages\RhinoCommon.7.14.22010.17001\build\RhinoCommon.targets" Condition="Exists('packages\RhinoCommon.7.14.22010.17001\build\RhinoCommon.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('packages\RhinoCommon.7.14.22010.17001\build\RhinoCommon.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\RhinoCommon.7.14.22010.17001\build\RhinoCommon.targets'))" />
-  </Target>
 </Project>
