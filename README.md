@@ -1,7 +1,7 @@
 CommandTracker
 ==============
 
-CommandTracker is a simple utility plug-in that tracks the command you run.
+CommandTracker is a simple utility plug-in that tracks the Rhino commands you run.
 
 Building Sample
 --------------------
