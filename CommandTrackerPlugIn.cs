@@ -46,10 +46,10 @@ namespace CommandTracker
     /// </summary>
     protected override LoadReturnCode OnLoad(ref string errorMessage)
     {
-      var settings = Settings;
+      PersistentSettings settings = Settings;
       if (null != settings)
       {
-        if (settings.TryGetBool(nameof(CommandTrackingEnabled), out var enabled))
+        if (settings.TryGetBool(nameof(CommandTrackingEnabled), out bool enabled))
           m_commandTrackingEnabled = enabled;
       }
       RhinoApp.WriteLine("Command tracking is {0}.", CommandTrackingEnabled ? "enabled" : "disabled");

@@ -117,15 +117,15 @@ namespace CommandTracker
     {
       message = null;
 
-      var doc = Document;
-      var commands = CommandDictionary;
+      RhinoDoc doc = Document;
+      ArchivableDictionary commands = CommandDictionary;
       if (null == doc || 0 == commands.Count)
         return false;
 
-      var sb = new StringBuilder();
+      StringBuilder sb = new StringBuilder();
       sb.Append("Summary information:\n");
 
-      var path = doc.Path;
+      string path = doc.Path;
       if (string.IsNullOrEmpty(path))
       {
         sb.AppendFormat("\t{0}\n", "<unnamed>");
@@ -133,7 +133,7 @@ namespace CommandTracker
       else
       {
         sb.AppendFormat("\t{0}\n", path);
-        if (File3dm.ReadRevisionHistory(path, out var creator, out var editor, out var revision, out var createDate, out var editDate))
+        if (File3dm.ReadRevisionHistory(path, out string creator, out string editor, out int revision, out DateTime createDate, out DateTime editDate))
         {
           sb.AppendFormat("\tCreated by:  {0}\n", creator);
           sb.AppendFormat("\tCreated on:  {0}\n", createDate.ToLongDateString());
@@ -143,25 +143,25 @@ namespace CommandTracker
         }
       }
 
-      var keys = commands.Keys;
+      string[] keys = commands.Keys;
       Array.Sort(keys);
 
       sb.Append("\nCommand history:\n");
-      foreach (var k in keys)
+      foreach (string k in keys)
       {
-        if (commands.TryGetInteger(k, out var value))
+        if (commands.TryGetInteger(k, out int value))
           sb.AppendFormat($"\t{k} ({value})\n");
       }
 
-      var saves = SaveDictionary;
+      ArchivableDictionary saves = SaveDictionary;
       if (saves.Count > 0)
       {
         keys = saves.Keys;
         Array.Sort(keys);
         sb.Append("\nSave history:\n");
-        foreach (var k in keys)
+        foreach (string k in keys)
         {
-          if (saves.TryGetString(k, out var value))
+          if (saves.TryGetString(k, out string value))
             sb.AppendFormat($"\t{k} ({value})\n");
         }
       }
@@ -215,13 +215,13 @@ namespace CommandTracker
     {
       if (CommandTrackerPlugIn.Instance.CommandTrackingEnabled)
       {
-        var vm = GetFromDocument(args.Document);
+        CommandTrackerViewModel vm = GetFromDocument(args.Document);
         if (null != vm)
         {
-          var date = DateTime.Now;
-          var key = date.ToString(dateFormat);
-          var value = $"{Environment.UserName}";
-          var saves = vm.SaveDictionary;
+          DateTime date = DateTime.Now;
+          string key = date.ToString(dateFormat);
+          string value = $"{Environment.UserName}";
+          ArchivableDictionary saves = vm.SaveDictionary;
           saves.Set(key, value);
         }
       }
@@ -233,13 +233,13 @@ namespace CommandTracker
     private static void OnEndCommand(object sender, CommandEventArgs args)
     {
       if (CommandTrackerPlugIn.Instance.CommandTrackingEnabled && args.CommandResult == Result.Success)
-      { 
-        var vm = GetFromDocument(args.Document);
+      {
+        CommandTrackerViewModel vm = GetFromDocument(args.Document);
         if (null != vm)
         {
-          var commands = vm.CommandDictionary;
-          var key = args.CommandEnglishName;
-          var value = commands.Getint(key, 0);
+          ArchivableDictionary commands = vm.CommandDictionary;
+          string key = args.CommandEnglishName;
+          int value = commands.Getint(key, 0);
           value++;
           commands.Set(key, value);
         }
@@ -259,7 +259,7 @@ namespace CommandTracker
     /// </summary>
     public static void WriteDocument(RhinoDoc doc, BinaryArchiveWriter archive, FileWriteOptions options)
     {
-      var vm = GetFromDocument(doc);
+      CommandTrackerViewModel vm = GetFromDocument(doc);
       if (null != vm)
       {
         archive.Write3dmChunkVersion(MAJOR, MINOR);
@@ -273,21 +273,21 @@ namespace CommandTracker
     /// </summary>
     public static void ReadDocument(RhinoDoc doc, BinaryArchiveReader archive, FileReadOptions options)
     {
-      var vm = GetFromDocument(doc);
+      CommandTrackerViewModel vm = GetFromDocument(doc);
       if (null != vm)
-      { 
-        archive.Read3dmChunkVersion(out var major, out var minor);
-        if ( major == MAJOR)
+      {
+        archive.Read3dmChunkVersion(out int major, out int minor);
+        if (major == MAJOR)
         {
           if (minor >= 0)
           {
-            var commands = archive.ReadDictionary();
+            ArchivableDictionary commands = archive.ReadDictionary();
             if (null != commands && options.OpenMode)
               vm.CommandDictionary = commands.Clone();
           }
           if (minor >= 1)
           {
-            var saves = archive.ReadDictionary();
+            ArchivableDictionary saves = archive.ReadDictionary();
             if (null != saves && options.OpenMode)
               vm.SaveDictionary = saves.Clone();
           }

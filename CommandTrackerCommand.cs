@@ -12,24 +12,24 @@ namespace CommandTracker
 
     protected override Result RunCommand(RhinoDoc doc, RunMode mode)
     {
-      var vm = CommandTrackerViewModel.GetFromDocument(doc);
+      CommandTrackerViewModel vm = CommandTrackerViewModel.GetFromDocument(doc);
       if (null == vm)
         return Result.Failure;
 
-      var go = new GetOption();
+      GetOption go = new GetOption();
       go.SetCommandPrompt("Command tracking options");
       go.AcceptNothing(true);
 
-      for (;;)
-      { 
+      for (; ; )
+      {
         go.ClearCommandOptions();
 
-        var clear_index = go.AddOption("Clear");
-        var report_index = go.AddOption("Report");
-        var opt_enable = new OptionToggle(CommandTrackerPlugIn.Instance.CommandTrackingEnabled, "Off", "On");
-        var enable_index = go.AddOptionToggle("Enable", ref opt_enable);
+        int clear_index = go.AddOption("Clear");
+        int report_index = go.AddOption("Report");
+        OptionToggle opt_enable = new OptionToggle(CommandTrackerPlugIn.Instance.CommandTrackingEnabled, "Off", "On");
+        int enable_index = go.AddOptionToggle("Enable", ref opt_enable);
 
-        var res = go.Get();
+        GetResult res = go.Get();
 
         if (res == GetResult.Nothing)
           return Result.Nothing;
@@ -37,19 +37,19 @@ namespace CommandTracker
         if (res != GetResult.Option)
           break;
 
-        var option = go.Option();
+        CommandLineOption option = go.Option();
         if (null == option)
           return Result.Failure;
 
-        var index = option.Index;
+        int index = option.Index;
         if (index == clear_index)
         {
-          var count = vm.CommandCount;
+          int count = vm.CommandCount;
 
           if (count > 0 && mode == RunMode.Interactive)
           {
-            var msg = "Are you sure you want to clear all command tracking history?";
-            var result = MessageBox.Show(msg, EnglishName, MessageBoxButtons.YesNo, MessageBoxType.Question, MessageBoxDefaultButton.No);
+            string msg = "Are you sure you want to clear all command tracking history?";
+            DialogResult result = MessageBox.Show(msg, EnglishName, MessageBoxButtons.YesNo, MessageBoxType.Question, MessageBoxDefaultButton.No);
             if (result == DialogResult.No)
               continue;
           }
@@ -70,7 +70,7 @@ namespace CommandTracker
         }
         else if (index == report_index)
         {
-          var rc = vm.Report(out var message);
+          bool rc = vm.Report(out string message);
           if (rc)
             Rhino.UI.Dialogs.ShowTextDialog(message, EnglishName);
           else
